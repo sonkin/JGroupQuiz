@@ -11,6 +11,7 @@ import {
   Routes,
   useParams,
 } from "react-router-dom";
+import QuestionCreator from "./QuestionCreator";
 
 export const UserContext = createContext();
 
@@ -80,6 +81,10 @@ const router = createBrowserRouter([
   {
     path: "/results",
     element: <UserTable />,
+  },
+  {
+    path: "/creator",
+    element: <QuestionCreator />,
   },
 ]);
 

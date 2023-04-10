@@ -1,0 +1,44 @@
+POST http://localhost:9000/users
+Content-Type: application/json
+
+{"username":"test3", "email": "text3@dxc.com", "score":1}
+
+###
+
+GET http://localhost:9000/users
+
+###
+
+GET http://localhost:9000/results
+
+
+###
+
+POST http://localhost:9000/results
+Content-Type: application/json
+
+{"name":"test1", "answers": ["first", "second"]}
+
+###
+
+POST http://localhost:9000/question
+Content-Type: application/json
+
+{"question":"What is Spring", "options":["time of year", "framework", "something unknown"], "correct":["time of year", "framework"]}
+
+###
+
+GET http://localhost:9000/finish
+
+
+###
+
+POST http://localhost:9000/question
+Content-Type: application/json
+
+{"question":"What is Spring Boot", "options":["great thing", "framework", "something unknown"], "correct":["great thing"]}
+
+###
+
+GET http://localhost:9000/results
+

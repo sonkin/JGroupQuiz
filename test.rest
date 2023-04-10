@@ -1,0 +1,21 @@
+POST http://23.97.148.236/users
+Content-Type: application/json
+
+{"username":"test3", "email": "text3@dxc.com", "score":1}
+
+###
+
+GET http://23.97.148.236/users
+
+###
+
+GET https://jquiz-athjd4btb4c0fadd.z01.azurefd.net/users
+
+###
+
+POST https://jquiz-athjd4btb4c0fadd.z01.azurefd.net/users
+Content-Type: application/json
+
+{"username":"test4", "email": "text4@dxc.com", "score":4}
+
+

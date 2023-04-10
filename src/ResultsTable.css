@@ -1,0 +1,26 @@
+.results-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14pt;
+}
+
+.results-table th,
+.results-table td {
+    border: 1px solid #d69bff;
+    padding: 8px;
+    text-align: left;
+}
+
+.results-table th {
+    background-color: rgba(178, 71, 255, 0.84);
+    color: white;
+
+}
+
+.results-table thead tr {
+    background-color: #f2f2f2;
+}
+
+.results-table tbody tr.even-row {
+    background-color: rgba(214, 155, 255, 0.16);
+}

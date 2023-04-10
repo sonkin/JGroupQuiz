@@ -49,11 +49,9 @@ const StartForm = ({ onStartQuiz, onFinishQuiz }) => {
   return (
     <div className="App">
       {!showQuiz && (
-        <div class="startForm">
+        <div className="startForm">
           <h2>
-            Topic 1: Collections <br />
-            <br />
-            QUIZ 1: Collections Hierarchy
+            JOIN THE GROUP <br/>of Spring MVC training!
           </h2>
           <div style={{ padding: "10px" }}>
             <label htmlFor="name">Name: </label>
@@ -82,7 +80,7 @@ const StartForm = ({ onStartQuiz, onFinishQuiz }) => {
             style={{ marginTop: "50px" }}
             onClick={handleStartQuiz}
           >
-            Start Quiz
+            Join!
           </button>
         </div>
       )}

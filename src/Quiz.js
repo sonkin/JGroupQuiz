@@ -1,35 +1,60 @@
-import React, { useState } from "react";
+import React, {useContext, useEffect, useState} from "react";
 import QuizQuestion from "./QuizQuestion";
+import {UserContext} from "./App";
+import ResultsTable from "./ResultsTable";
+import stopwatch from "./assets/stopwatch.gif";
+import stopwatch2 from "./assets/stopwatch2.gif";
+
+// create the WebSocket connection
+let socket = new WebSocket("ws://localhost:8081");
 
 const Quiz = ({ questions, onFinishQuiz }) => {
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [solvedQuestions, setSolvedQuestions] = useState([]);
+  const [question, setQuestion] = useState(null);
+  const [waitingForResults, setWaitingForResults] = useState(false);
+  const [waitingForQuestion, setWaitingForQuestion] = useState(true);
+  const [results, setResults] = useState([]);
   const [score, setScore] = useState(0);
+  const { name, setName, email, setEmail } = useContext(UserContext);
+
+  useEffect(() => {
+    socket.onmessage = function (event) {
+      let message = JSON.parse(event.data);
+      if (message.type === "question") {
+        setQuestion(message);
+        setResults(null);
+        setWaitingForQuestion(false);
+      }
+      if (message.type === "results") {
+        setResults(message.results);
+        setWaitingForResults(false);
+      }
+    };
+  }, []);
 
   const handleQuestionSolved = (isCorrect) => {
     if (isCorrect) {
-      setSolvedQuestions([...solvedQuestions, currentQuestionIndex]);
       setScore(score + 1);
     } else {
       setScore(score - 1);
     }
   };
 
-  const handleNextClick = () => {
-    if (currentQuestionIndex === questions.length - 1) {
-      setCurrentQuestionIndex(null);
-      onFinishQuiz(score);
-    } else {
-      setCurrentQuestionIndex(currentQuestionIndex + 1);
-    }
+  const handleSubmit = (answers) => {
+    const requestOptions = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name, answers }),
+    };
+    fetch("http://localhost:9000/results", requestOptions).then((response) => {
+      if (response.ok) {
+        setWaitingForResults(true);
+      }
+    });
   };
 
-  const currentQuestion = questions[currentQuestionIndex];
-  const totalQuestions = questions.length;
-
   return (
-    <div>
-      <div
+      <div>
+{/*      <div
         style={{
           textAlign: "center",
           marginTop: "20px",
@@ -37,44 +62,30 @@ const Quiz = ({ questions, onFinishQuiz }) => {
         }}
       >
         Current score: {score}
+      </div>*/}
+
+        {question && (
+            <div>
+              <QuizQuestion showResults={results && results.length>0}
+                            question={question} onSubmit={handleSubmit}/>
+            </div>
+        )}
+        {waitingForResults && (
+            <div>
+              <h2 style={{color:"#4345B8"}}>Waiting for the results...</h2>
+              <img src={stopwatch} width={200}/>
+            </div>
+        )}
+        {results && results.length > 0 && (
+            <ResultsTable results={results} question={question} />
+        )}
+        {waitingForQuestion && (
+            <div>
+              <h2 style={{color:"#4345B8"}}>Waiting for the first question...</h2>
+              <img src={stopwatch2} width={200}/>
+            </div>
+        )}
       </div>
-      {currentQuestion && (
-        <p
-          style={{
-            fontSize: "15pt",
-            fontWeight: "bold",
-            padding: "10px",
-            backgroundColor: "#eef",
-          }}
-        >
-          Question {currentQuestionIndex + 1} of {totalQuestions}
-        </p>
-      )}
-      {currentQuestion && (
-        <QuizQuestion
-          question={currentQuestion}
-          onSolved={handleQuestionSolved}
-          score={score}
-        />
-      )}
-      {solvedQuestions.includes(currentQuestionIndex) && (
-        <button className="button-style" onClick={handleNextClick}>
-          {currentQuestionIndex === questions.length - 1
-            ? "Finish Quiz"
-            : "Next Question"}
-        </button>
-      )}
-      {!currentQuestion && (
-        <div>
-          <h2>Final Score: {score}</h2>
-          <p style={{ fontSize: "15pt" }}>
-            You have answered all {totalQuestions}{" "}
-            {totalQuestions > 1 ? "questions" : "question"}. <br />
-            Thank you for participation!
-          </p>
-        </div>
-      )}
-    </div>
   );
 };
 
