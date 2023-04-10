@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import ResultsTable from './ResultsTable';
+import {HTTPURL, WSURL} from "./SERVER";
 
 // create the WebSocket connection
-let socket = new WebSocket("ws://localhost:8081");
+let socket = new WebSocket(WSURL);
 
 const QuestionCreator = () => {
     const [questionText, setQuestionText] = useState('');
@@ -34,7 +35,7 @@ const QuestionCreator = () => {
     }, [question]);
 
     const finishQuestion = async () => {
-        await axios.post('http://localhost:9000/finish');
+        await axios.post(HTTPURL+'/finish');
         setFinishedQuestion(true);
         setSubmittedQuestion(false);
     }
@@ -62,7 +63,7 @@ const QuestionCreator = () => {
 
         try {
             // Send the POST request
-            const response = await axios.post('http://localhost:9000/question', payload);
+            const response = await axios.post(HTTPURL+'/question', payload);
             setSubmittedQuestion(true);
         } catch (error) {
             console.error('Error while submitting the question:', error);

@@ -4,9 +4,10 @@ import {UserContext} from "./App";
 import ResultsTable from "./ResultsTable";
 import stopwatch from "./assets/stopwatch.gif";
 import stopwatch2 from "./assets/stopwatch2.gif";
+import {HTTPURL, WSURL} from "./SERVER";
 
 // create the WebSocket connection
-let socket = new WebSocket("ws://localhost:8081");
+let socket = new WebSocket(WSURL);
 
 const Quiz = ({ questions, onFinishQuiz }) => {
   const [question, setQuestion] = useState(null);
@@ -45,7 +46,7 @@ const Quiz = ({ questions, onFinishQuiz }) => {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ name, answers }),
     };
-    fetch("http://localhost:9000/results", requestOptions).then((response) => {
+    fetch(HTTPURL+"/results", requestOptions).then((response) => {
       if (response.ok) {
         setWaitingForResults(true);
       }
